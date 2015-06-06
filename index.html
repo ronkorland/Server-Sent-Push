@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <title>Desktop Notification Example</title>
+        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+<button class="show">Show notification</button>
+        <script>
+        		$('.show').on('click', function() {
+        			notify("Notification Title","Notification Msg","http://www.marketo.com");
+        		});
+        		document.addEventListener('DOMContentLoaded', function () {
+        			if (!("Notification" in window)) {
+    					console.error("This browser does not support desktop notification"); 
+    					return;
+  					}
+  					if (Notification.permission !== "granted")
+    					Notification.requestPermission();
+				});
+                function notify(title,message,url) {
+                	if (!("Notification" in window)) {
+    					console.error("This browser does not support desktop notification"); 
+    					return;
+  					}
+                    var havePermission = window.Notification.permission;
+                    if (havePermission == 'granted') {
+                        var notification = new window.Notification(title, {
+                            icon: 'http://a4.mzstatic.com/us/r30/Purple/v4/62/43/c8/6243c811-22a5-3044-078e-36fc2aa4b366/icon175x175.png',
+                            body: message
+                        });
+
+                        notification.onclick = function () {
+                            window.open(url);
+                        }
+                    } else {
+                        Notification.requestPermission();
+                    }
+                }
+                if(typeof(EventSource) !== "undefined") {
+					var source = new EventSource("push_source.php");
+                	source.addEventListener('message', function(e) {
+                		var data = JSON.parse(e.data);
+                    	notify(data.title,data.message,data.url);
+                	}, false);
+				} else {
+					console.error("This browser does not support EventSource");
+				}
+                
+        </script>
+</body>
+</html>
