@@ -3,9 +3,6 @@ header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 header("Access-Control-Allow-Origin: *");
 
-
-
-
 $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
 
